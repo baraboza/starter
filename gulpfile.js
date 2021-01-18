@@ -34,25 +34,23 @@ gulp.task('styles', function() {
 	.pipe(browserSync.stream())
 });
 
-gulp.task('scripts', function() {
+gulp.task('libs-js', function() {
 	return gulp.src([
 		'app/libs/jquery/dist/jquery.min.js'
-		])
+	])
 	.pipe(concat('libs.min.js'))
 	.pipe(uglify())
 	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.reload({ stream: true }))
 });
 
 gulp.task('code', function() {
-	return gulp.src('app/*.html')
+	return gulp.src(['app/*.html', 'app/js/*.js'])
 	.pipe(browserSync.reload({ stream: true }))
 });
 
 gulp.task('watch', function() {
 	gulp.watch('app/scss/**/*.scss', gulp.parallel('styles'));
-	gulp.watch(['libs/**/*.js', 'app/js/common.js'], gulp.parallel('scripts'));
-	gulp.watch('app/*.html', gulp.parallel('code'));
+	gulp.watch(['app/*.html', 'app/js/*.js'], gulp.parallel('code'));
 });
 
-gulp.task('default', gulp.parallel('styles', 'scripts', 'browser-sync', 'watch'));
+gulp.task('default', gulp.parallel('styles', 'libs-js', 'browser-sync', 'watch'));
